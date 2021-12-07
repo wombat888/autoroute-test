@@ -24,7 +24,7 @@ class _BookListPageState extends State<BookListPage> {
                             title: Text(book.name),
                             subtitle: Text(book.genre),
                             onTap: () {
-                              BookDetailsRoute(id: book.id).show(context);
+                              BookDetailsRoute(bookId: book.id).show(context);
                             },
                           ),
                         ),

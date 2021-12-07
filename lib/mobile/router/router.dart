@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:example/mobile/screens/books/book_details_page.dart';
 import 'package:example/mobile/screens/books/book_list_page.dart';
+import 'package:example/mobile/screens/books/book_publisher_details_page.dart';
 
 import '../screens/home_page.dart';
 import '../screens/login_page.dart';
@@ -28,11 +29,19 @@ import '../screens/user-data/routes.dart';
               path: '',
               page: BookListPage,
             ),
-            AutoRoute(
-              path: ':id',
-              page: BookDetailsPage,
-              meta: {'hideBottomNav': true},
-            ),
+            AutoRoute(path: ':bookId', page: BookDetailsPage, meta: {
+              'hideBottomNav': true
+            }, children: [
+              AutoRoute(
+                path: 'bookPublishers',
+                page: EmptyRouterPage,
+                name: 'BookPublishers',
+                children: [
+                  AutoRoute(
+                      path: ':bookPublisherId', page: BookPublisherDetailsPage),
+                ],
+              ),
+            ]),
           ],
         ),
         profileTab,

@@ -1,14 +1,15 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:example/mobile/router/router.gr.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/db.dart';
 
 class BookDetailsPage extends StatefulWidget {
-  final int id;
+  final int bookId;
 
   const BookDetailsPage({
-    @PathParam('id') this.id = -1,
+    @PathParam('bookId') this.bookId = -1,
   });
 
   @override
@@ -21,7 +22,8 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final booksDb = BooksDBProvider.of(context);
-    final book = booksDb?.findBookById(widget.id);
+    final book = booksDb?.findBookById(widget.bookId);
+    final bookPublishersDb = BookPublishersDB();
 
     return book == null
         ? Container(child: Text('Book null'))
@@ -36,6 +38,22 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Book Details/${book.id}'),
+                      Flexible(
+                          child: ListView.builder(
+                              itemCount: book.publisherIds.length,
+                              itemBuilder:
+                                  (BuildContext context, int bookPublisherId) {
+                                final bookPublisher = bookPublishersDb
+                                    .findBookPublisherById(bookPublisherId);
+                                return ListTile(
+                                    title: Text(bookPublisher.name),
+                                    subtitle: Text(bookPublisher.description),
+                                    onTap: () {
+                                      BookPublisherDetailsRoute(
+                                              bookPublisherId: bookPublisherId)
+                                          .show(context);
+                                    });
+                              })),
                       Padding(
                         padding: const EdgeInsets.only(top: 24),
                         child: Text(
